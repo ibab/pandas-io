@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='pandas_io',
+setup(name='pandas-io',
       version='0.0',
       description='Read and save DataFrames using various additional data formats',
       url='http://github.com/ibab/pandas-io',
