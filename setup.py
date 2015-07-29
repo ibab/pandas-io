@@ -11,5 +11,5 @@ setup(name='pandas_io',
           'numpy',
           'pandas',
       ],
-      packages=['pandas_io'],
+      packages=['pandas.io.external'],
       zip_safe=False)

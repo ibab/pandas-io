@@ -4,13 +4,10 @@ A module that extends pandas to support the ROOT data format.
 """
 
 from pandas import DataFrame
-from root_numpy import root2array, list_trees
 from fnmatch import fnmatch
-from root_numpy import list_branches
 import itertools
 from math import ceil
 import re
-import ROOT
 
 __all__ = ['read_root', 'to_root']
 
@@ -57,6 +54,13 @@ def get_matching_variables(branches, patterns, fail=True):
     return selected
 
 def read_root(path, tree_key=None, columns=None, ignore=None, chunksize=None, where=None, *args, **kwargs):
+
+    try:
+        from root_numpy import root2array, list_trees, list_branches
+        import ROOT
+    except:
+        raise ImportError("You need the root_numpy package for ROOT integration")
+
     """
     Read a ROOT file into a pandas DataFrame.
     Further *args and *kwargs are passed to root_numpy's root2array.
@@ -158,6 +162,11 @@ def to_root(df, path, tree_key="default", mode='w', *args, **kwargs):
     The DataFrame index will be saved as a branch called 'index'.
     """
 
+    try:
+        from root_numpy import array2root
+    except ImportError:
+        raise ImportError("You need the root_numpy package for ROOT integration")
+
     if mode == 'a':
         mode = 'update'
     elif mode == 'w':
@@ -165,7 +174,6 @@ def to_root(df, path, tree_key="default", mode='w', *args, **kwargs):
     else:
         raise ValueError('Unknown mode: {}. Must be "a" or "w".'.format(mode))
 
-    from root_numpy import array2root
     arr = df.to_records()
     array2root(arr, path, tree_key, mode=mode, *args, **kwargs)
 
